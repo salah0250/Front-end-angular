@@ -17,7 +17,7 @@ export class AssignmentEditComponent implements OnInit {
  matiere!: string;
  Notes!: number;
  Remarque!: string;
- matieres: string[] = ['math', 'Physique', 'Informatique', 'Anglais'];
+ matieres: string[] = ['Math pour Big Data', '	Programmation Avancée', 'Planification de Projet', 'Systeme information','Fonctionnement de SGBD' , 'JavaScript et HTML5'];
 
  constructor(
    private assignmentsService: AssignmentService,
