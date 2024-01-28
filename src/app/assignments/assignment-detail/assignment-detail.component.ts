@@ -122,8 +122,10 @@ export class AssignmentDetailComponent implements OnInit ,OnDestroy{
     const currentUserItem = localStorage.getItem('currentUser');
     if (currentUserItem) {
       const user = JSON.parse(currentUserItem);
-      return this.authService.isAdmin(user.Email, user.password);
-    }
+      return this.authService.isAdmin(user.Email, user.password).pipe(
+        map(role => !!role), // Convert role (string | null) to boolean
+        catchError(() => of(false))
+      );    }
     return of(false);
   }
   canEdit(): Observable<boolean> {
