@@ -128,7 +128,7 @@
           Voir
         </button>
       </a> 
-      <button  mat-raised-button color="warn" (click)="$event.stopPropagation(); deleteAssignment(assignmentSelectionne)" style="float: right;">Delete</button> 
+      <button  mat-raised-button color="warn" *ngIf="canEdit()" (click)="$event.stopPropagation(); deleteAssignment(assignmentSelectionne)" style="float: right;">Delete</button> 
 
        <mat-checkbox *ngIf="!assignmentSelectionne.rendu" (click)="onAssignmentRendu()">Devoir rendu</mat-checkbox>
     </mat-card-content>

@@ -102,32 +102,34 @@ export class AssignmentDetailComponent implements OnInit ,OnDestroy{
     */
   }
   deleteAssignment(assignment: Assignment) {
-    console.log('Deleting assignment', assignment); // Check if this logs when you click the button
-    if (this.canEditOrDelete() && this.assignmentSelectionne) {
-      this.assignmentService.deleteAssignment(this.assignmentSelectionne).subscribe(reponse => {
-        console.log(reponse.message);
-        this.router.navigate(['/ajout-devoir']);
-      });
-      this.snackBar.open('Devoir Supprimer!', 'Fermer', {
-        duration: 3000, // Durée d'affichage du SnackBar en millisecondes
-        horizontalPosition: 'end', // Position horizontale du SnackBar (start, center, end)
-        verticalPosition: 'top', // Position verticale du SnackBar (top, bottom)
-      });
-    } else {  
-      this.router.navigate(['/login']);
-    }
+    this.canEditOrDelete().subscribe(({ canDelete }) => {
+      if (canDelete) {
+        this.assignmentService.deleteAssignment(assignment).subscribe(response => {
+          console.log(response.message);
+          this.router.navigate(['/ajout-devoir']);
+        });
+        this.snackBar.open('Devoir Supprimer!', 'Fermer', {
+          duration: 3000,
+          horizontalPosition: 'end',
+          verticalPosition: 'top',
+        });
+      } else {
+        this.router.navigate(['/login']);
+      }
+    });
   }
   
-  canEditOrDelete(): Observable<boolean> {
+  canEditOrDelete(): Observable<{ canDelete: boolean }> {
     const currentUserItem = localStorage.getItem('currentUser');
     if (currentUserItem) {
       const user = JSON.parse(currentUserItem);
       return this.authService.isAdmin(user.Email, user.password).pipe(
-        map(role => !!role), // Convert role (string | null) to boolean
-        catchError(() => of(false))
-      );    }
-    return of(false);
+        map(canDelete => ({ canDelete }))
+      );
+    }
+    return of({ canDelete: false });
   }
+  
   canEdit(): Observable<boolean> {
     const currentUserItem = localStorage.getItem('currentUser');
     if (currentUserItem) {
