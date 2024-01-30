@@ -70,6 +70,19 @@ export class AuthenticationService {
       catchError(() => of(false))
     );
   }
+  isetudiant(Email: string, password: string): Observable<boolean> {
+    return this.http.post<User>('https://back-end-assignment.onrender.com/api/users', { Email, password }).pipe(
+      map(user => {
+        if (user) {
+          localStorage.setItem('currentUser', JSON.stringify({ Email: user.Email, password: user.password, role: user.role, Nom: user.Nom }));
+          console.log('currentUser', JSON.parse(localStorage.getItem('currentUser') || '{}'));
+          return user.role === 'etudiant';
+        }
+        return false;
+      }),
+      catchError(() => of(false))
+    );
+  }
   createAccount(user: any): Observable<any> {
     return this.http.post('https://back-end-assignment.onrender.com/api/users/create-account', user);
   }

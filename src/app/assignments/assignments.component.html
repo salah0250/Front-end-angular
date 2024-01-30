@@ -5,7 +5,9 @@
   <button mat-icon-button class="example-icon home-button" aria-label="home" routerLink="../">
     <mat-icon>home</mat-icon>
   </button>
- 
+  <nav class="center-image">
+    <img [src]="imageSource" style="width: 20%;">
+  </nav>
   <button mat-icon-button class="example-icon logout-button" aria-label="Logout" (click)="logout()">
     <mat-icon>logout</mat-icon>
   </button>

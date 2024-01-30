@@ -28,7 +28,8 @@ export class AssignmentsComponent implements OnInit {
   showLayout$: Observable<boolean>;
   titre : String = "Mon application Angular sur les assignments"
   assignments:Assignment[] = [];
-
+// In your component
+imageSource = '../../assets/UCA.png';
   constructor(private router: Router,private layoutService: LayoutService) {
     this.showLayout$ = this.layoutService.showLayout$;
    }

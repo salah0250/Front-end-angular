@@ -1,7 +1,7 @@
 import { Component, OnInit,Input,OnDestroy } from '@angular/core';
 import { Assignment } from './assignment-detail.model';
 import { AssignmentService } from '../../services/assignmentService';
-import { Observable, Subscription, catchError, map, of } from 'rxjs';
+import { Observable, Subscription, catchError, endWith, map, of } from 'rxjs';
 import { ChangeDetectorRef } from '@angular/core';
 import { Router, ActivatedRoute} from '@angular/router';
 import { AuthenticationService } from '../../services/authentication.service';
@@ -192,8 +192,12 @@ onPageSizeChange() {
 
 loadAssignments() {
   const startIndex = this.currentPage * this.pageSize;
-  const endIndex = startIndex + this.pageSize;
-  this.assignmentService
+  const endIndex = Number(this.pageSize) + Number(startIndex);
+  console.log('startIndex:', startIndex);
+  console.log('endIndex:', endIndex);
+  console.log('searchTerm:', this.searchTerm);
+  console.log('selectedFilter:', this.selectedFilter);
+  this.assignmentService 
     .getAssignmentsPaginated(startIndex, endIndex, this.searchTerm, this.selectedFilter)
     .subscribe((assignments) => {
       // Sort assignments based on the date

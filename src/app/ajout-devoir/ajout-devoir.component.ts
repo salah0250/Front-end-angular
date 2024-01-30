@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { AssignmentService } from '../services/assignmentService';
 import { MatStepper } from '@angular/material/stepper';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Observable, catchError, map, of } from 'rxjs';
+import { AuthenticationService } from '../services/authentication.service';
 
 
 @Component({
@@ -19,7 +21,7 @@ export class AjoutDevoirComponent implements OnInit {
   titre : String = "Mon application Angular sur les assignments"
   assignments:Assignment[] = [];
 
-  constructor(private router : Router,private assignmentService: AssignmentService,private snackBar: MatSnackBar) { }
+  constructor(private router : Router,private assignmentService: AssignmentService,private snackBar: MatSnackBar,private authService: AuthenticationService ) { }
     ajoutActive = false;
     nomDevoir:string = "";
     nomMatiere:string = "";
@@ -33,6 +35,8 @@ export class AjoutDevoirComponent implements OnInit {
       stepper.next();
     }
     onSubmit() {
+      if(this.canView()){
+    
       const newAssignment = new Assignment();
     newAssignment.id = Math.floor(Math.random() * 1000);
 
@@ -69,10 +73,28 @@ export class AjoutDevoirComponent implements OnInit {
       horizontalPosition: 'end', // Position horizontale du SnackBar (start, center, end)
       verticalPosition: 'top', // Position verticale du SnackBar (top, bottom)
     });
+  } else {
+    this.router.navigate(['/login']);
   }
-  
-   
+}
+ 
+
+  canView(): Observable<boolean> {
+    const currentUserItem = localStorage.getItem('currentUser');
+    if (currentUserItem) {
+      const user = JSON.parse(currentUserItem);
+      return this.authService.isprof(user.Email, user.password) || this.authService.isAdmin(user.Email, user.password) || this.authService.isetudiant(user.Email, user.password);
+    }
+    return of(false);
+  }
   ngOnInit(): void {
+    if (this.canView()){
+    this.snackBar.open('Vous devez etre connecter pour utiliser App!', 'Fermer', {
+      duration: 1000, // Durée d'affichage du SnackBar en millisecondes
+      horizontalPosition: 'end', // Position horizontale du SnackBar (start, center, end)
+      verticalPosition: 'top', // Position verticale du SnackBar (top, bottom)
+    });
+  }
     setTimeout  (() => {
       this.ajoutActive = true;
     } , 2000);

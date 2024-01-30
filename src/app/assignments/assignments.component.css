@@ -17,6 +17,15 @@
   overflow: hidden; /* Assurez-vous que le débordement est masqué pour que les flèches soient coupées au-delà de la barre d'outils */
 
 }
+.center-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mat-toolbar img {
+  width: 20%;
+}
 
 .arrow {
   width: 20px;
